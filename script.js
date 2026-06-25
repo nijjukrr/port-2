@@ -15,6 +15,7 @@ class TerminalResume {
     this.projects = [];
     this.skills = {};
     this.fileSystem = {};
+    this.currentPath = "resume";
     this.gameActive = false;
     this.gameHandler = null;
 
@@ -217,6 +218,9 @@ class TerminalResume {
       "calc",
       "calculate",
       "pdf",
+      "ls",
+      "cd",
+      "cat",
     ];
 
     // Find matching commands
@@ -501,6 +505,88 @@ class TerminalResume {
         this.stopMatrixEffect();
         this.printToOutput(outputElement, "Matrix effect stopped.", "info");
         break;
+      case "ls": {
+        const dir = this.navigateFileSystem(this.currentPath);
+        if (dir && dir.type === "directory") {
+          const contents = Object.keys(dir.contents)
+            .map((name) => {
+              const item = dir.contents[name];
+              if (item.type === "directory") {
+                return `<span style="color: #00ffff; font-weight: bold;">${name}/</span>`;
+              } else {
+                return `<span style="color: #ffffff;">${name}</span>`;
+              }
+            })
+            .join("   ");
+          this.printToOutput(outputElement, contents || "(empty directory)", "info");
+        } else {
+          this.printToOutput(outputElement, "Error: current directory not found", "error");
+        }
+        break;
+      }
+      case "cd": {
+        const target = args[0];
+        if (!target || target === "~" || target === "/") {
+          this.currentPath = "";
+          const titleEl = inputElement.closest(".terminal").querySelector(".terminal-title");
+          if (titleEl) titleEl.textContent = "nishanth@kr: ~";
+        } else if (target === "..") {
+          if (this.currentPath !== "") {
+            const parts = this.currentPath.split("/");
+            parts.pop();
+            this.currentPath = parts.join("/");
+            const titleEl = inputElement.closest(".terminal").querySelector(".terminal-title");
+            if (titleEl) titleEl.textContent = `nishanth@kr: ~/${this.currentPath}`;
+          }
+        } else {
+          let pathToCheck = this.currentPath ? `${this.currentPath}/${target}` : target;
+          const dir = this.navigateFileSystem(pathToCheck);
+          if (dir && dir.type === "directory") {
+            this.currentPath = pathToCheck;
+            const titleEl = inputElement.closest(".terminal").querySelector(".terminal-title");
+            if (titleEl) titleEl.textContent = `nishanth@kr: ~/${this.currentPath}`;
+          } else {
+            this.printToOutput(outputElement, `cd: no such file or directory: ${target}`, "error");
+          }
+        }
+        break;
+      }
+      case "cat": {
+        const target = args[0];
+        if (!target) {
+          this.printToOutput(outputElement, "Usage: cat [filename]", "error");
+          break;
+        }
+        let pathToCheck = this.currentPath ? `${this.currentPath}/${target}` : target;
+        const file = this.navigateFileSystem(pathToCheck);
+        if (file && file.type === "file") {
+          if (
+            file.content.endsWith(".png") ||
+            file.content.endsWith(".jpg") ||
+            file.content.endsWith(".jpeg") ||
+            file.content.endsWith(".gif")
+          ) {
+            const imgHtml = `<div style="margin: 10px 0; max-width: 100%; border: 3px solid var(--border); box-shadow: 4px 4px 0 var(--border); display: inline-block; background: #fff;">
+              <img src="${file.content}" style="max-width: 100%; max-height: 400px; display: block;" alt="${target}">
+            </div>`;
+            const div = document.createElement("div");
+            div.innerHTML = imgHtml;
+            outputElement.appendChild(div);
+          } else if (file.content.endsWith(".pdf")) {
+            const pdfHtml = `<div style="margin: 10px 0; width: 100%; height: 500px; border: 3px solid var(--border); box-shadow: 4px 4px 0 var(--border); background: #fff;">
+              <iframe src="${file.content}" style="width: 100%; height: 100%; border: none;"></iframe>
+            </div>`;
+            const div = document.createElement("div");
+            div.innerHTML = pdfHtml;
+            outputElement.appendChild(div);
+          } else {
+            this.printToOutput(outputElement, file.content, "info");
+          }
+        } else {
+          this.printToOutput(outputElement, `cat: no such file: ${target}`, "error");
+        }
+        break;
+      }
       case "weather":
         this.showWeather(args.join(" "), outputElement);
         break;
@@ -522,24 +608,24 @@ class TerminalResume {
   }
 
   printWelcomeMessage(outputElement = this.output) {
-    const asciiArt = `███╗   ███╗ █████╗ ██████╗ ██╗ ██████╗
-████╗ ████║██╔══██╗██╔══██╗██║██╔═══██╗
-██╔████╔██║███████║██████╔╝██║██║   ██║
-██║╚██╔╝██║██╔══██║██╔══██╗██║██║   ██║
-██║ ╚═╝ ██║██║  ██║██║  ██║██║╚██████╔╝
-╚═╝     ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝ ╚═════╝ `;
+    const asciiArt = `███╗   ██╗██╗███████╗██╗  ██╗ █████╗ ███╗   ██╗████████╗██╗  ██╗
+████╗  ██║██║██╔════╝██║  ██║██╔══██╗████╗  ██║╚══██╔══╝██║  ██║
+██╔██╗ ██║██║███████╗███████║███████║██╔██╗ ██║   ██║   ███████║
+██║╚██╗██║██║╚════██║██╔══██║██╔══██║██║╚██╗██║   ██║   ██╔══██║
+██║ ╚████║██║███████║██║  ██║██║  ██║██║ ╚████║   ██║   ██║  ██║
+╚═╝  ╚═══╝╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝   ╚═╝   ╚═╝  ╚═╝`;
 
-    const divider = "─────────────────────────────────────────────────";
+    const divider = "───────────────────────────────────────────────────────────";
 
     const welcome =
       this.wrapWithColor(asciiArt + "\n", "#d4843e") +
       this.wrapWithColor(divider + "\n", "#555555") +
       this.wrapWithColor(
-        "              Interactive Terminal Resume\n",
+        "                Interactive Terminal Resume\n",
         "#888888"
       ) +
       this.wrapWithColor(
-        "         Software Engineer • Cloud Architect • Tech Lead\n",
+        "               Software Engineer & AI Student\n",
         "#666666"
       ) +
       this.wrapWithColor(divider + "\n\n", "#555555") +
@@ -582,6 +668,19 @@ class TerminalResume {
       this.wrapWithColor("• clear", "#98fb98") +
       "      " +
       this.wrapWithColor("Clear the terminal screen\n", "#ffffff");
+
+    const fileCommands =
+      "\n" +
+      this.wrapWithColor("File System Commands:\n", "#00ffff") +
+      this.wrapWithColor("• ls", "#98fb98") +
+      "        " +
+      this.wrapWithColor("List files and directories\n", "#ffffff") +
+      this.wrapWithColor("• cd [dir]", "#98fb98") +
+      "   " +
+      this.wrapWithColor("Change current directory\n", "#ffffff") +
+      this.wrapWithColor("• cat [file]", "#98fb98") +
+      "  " +
+      this.wrapWithColor("View file contents (supports images!)\n", "#ffffff");
 
     const utilityCommands =
       "\n" +
@@ -635,7 +734,7 @@ class TerminalResume {
       " " +
       this.wrapWithColor("Split vertically", "#444444");
 
-    const help = title + mainCommands + utilityCommands + shortcuts;
+    const help = title + mainCommands + fileCommands + utilityCommands + shortcuts;
 
     const helpDiv = document.createElement("div");
     helpDiv.innerHTML = help;
@@ -1038,6 +1137,56 @@ ${this.wrapWithColor("╰──────────────────�
           "contact.txt": {
             type: "file",
             content: "GitHub: https://github.com/nijjukrr\nLinkedIn: https://www.linkedin.com/in/nishanth-kr-6105a2380/"
+          },
+          projects: {
+            type: "directory",
+            contents: {
+              "portfolio.png": { type: "file", content: "image/projects/Screenshot 2026-04-12 145443.png" },
+              "resume_design.png": { type: "file", content: "image/projects/Screenshot 2026-04-12 145459.png" },
+              "dashboard.png": { type: "file", content: "image/projects/Screenshot 2026-04-12 145528.png" },
+              "task_manager.png": { type: "file", content: "image/projects/Screenshot 2026-04-12 145546.png" },
+              "analytics.png": { type: "file", content: "image/projects/Screenshot 2026-04-12 145556.png" },
+              "weather_widget.png": { type: "file", content: "image/projects/Screenshot 2026-04-12 145604.png" },
+              "source_code.png": { type: "file", content: "image/projects/Screenshot 2026-04-12 145615.png" },
+              "calculator.png": { type: "file", content: "image/projects/Screenshot 2026-04-12 145628.png" },
+              "profile_section.png": { type: "file", content: "image/projects/Screenshot 2026-04-12 145636.png" },
+              "skills_visual.png": { type: "file", content: "image/projects/Screenshot 2026-04-12 145649.png" },
+              "project_shot_11.png": { type: "file", content: "image/projects/Screenshot 2026-04-12 145716.png" },
+              "project_shot_12.png": { type: "file", content: "image/projects/Screenshot 2026-04-12 145724.png" },
+              "project_shot_13.png": { type: "file", content: "image/projects/Screenshot 2026-04-12 145732.png" },
+              "project_shot_14.png": { type: "file", content: "image/projects/Screenshot 2026-04-12 145741.png" },
+              "project_shot_15.png": { type: "file", content: "image/projects/Screenshot 2026-04-12 154158.png" },
+              "project_shot_16.png": { type: "file", content: "image/projects/Screenshot 2026-04-12 154208.png" },
+              "project_shot_17.png": { type: "file", content: "image/projects/Screenshot 2026-04-12 154320.png" },
+              "project_shot_18.png": { type: "file", content: "image/projects/Screenshot 2026-04-12 154329.png" },
+              "project_shot_19.png": { type: "file", content: "image/projects/Screenshot 2026-04-12 154340.png" },
+              "project_shot_20.png": { type: "file", content: "image/projects/Screenshot 2026-04-12 154356.png" },
+              "project_shot_21.png": { type: "file", content: "image/projects/Screenshot 2026-04-12 154405.png" },
+              "project_shot_22.png": { type: "file", content: "image/projects/Screenshot 2026-04-12 154413.png" },
+              "project_shot_23.png": { type: "file", content: "image/projects/Screenshot 2026-04-12 154703.png" },
+              "project_shot_24.png": { type: "file", content: "image/projects/Screenshot 2026-04-12 154712.png" },
+              "project_shot_25.png": { type: "file", content: "image/projects/Screenshot 2026-04-12 154722.png" },
+              "project_shot_26.png": { type: "file", content: "image/projects/Screenshot 2026-04-12 220854.png" },
+              "project_shot_27.png": { type: "file", content: "image/projects/Screenshot 2026-04-12 220908.png" },
+              "project_shot_28.png": { type: "file", content: "image/projects/Screenshot 2026-04-12 224346.png" }
+            }
+          },
+          certificates: {
+            type: "directory",
+            contents: {
+              "resume.pdf": { type: "file", content: "image/certificates/K. R (1).pdf" },
+              "cert_web_dev.png": { type: "file", content: "image/certificates/Screenshot 2026-04-14 213415.png" },
+              "cert_ai_ml.png": { type: "file", content: "image/certificates/Screenshot 2026-04-14 213701.png" },
+              "cert_internship.png": { type: "file", content: "image/certificates/Screenshot 2026-04-14 214536.png" },
+              "cert_java.png": { type: "file", content: "image/certificates/Screenshot 2026-04-14 214905.png" },
+              "cert_dsa.png": { type: "file", content: "image/certificates/Screenshot 2026-04-14 215224.png" },
+              "cert_python.png": { type: "file", content: "image/certificates/Screenshot 2026-04-14 215533.png" },
+              "cert_sql.png": { type: "file", content: "image/certificates/Screenshot 2026-04-14 215841.png" },
+              "cert_web_design.png": { type: "file", content: "image/certificates/Screenshot 2026-04-14 220213.png" },
+              "cert_problem_solving.png": { type: "file", content: "image/certificates/Screenshot 2026-04-14 220554.png" },
+              "cert_cloud_computing.png": { type: "file", content: "image/certificates/Screenshot 2026-04-14 220956.png" },
+              "cert_unlox_academy.png": { type: "file", content: "image/certificates/Screenshot 2026-04-14 221244.png" }
+            }
           }
         }
       }
@@ -1764,15 +1913,15 @@ ${this.wrapWithColor("╰──────────────────�
     const asciiArt = document.createElement("pre");
     asciiArt.style.color = "#d4843e";
     asciiArt.style.margin = "0";
-    asciiArt.style.fontSize = "10px";
+    asciiArt.style.fontSize = "7.5px";
     asciiArt.style.fontFamily = "'Fira Code', monospace";
     asciiArt.style.lineHeight = "1";
-    asciiArt.innerHTML = `███╗   ███╗ █████╗ ██████╗ ██╗ ██████╗
-████╗ ████║██╔══██╗██╔══██╗██║██╔═══██╗
-██╔████╔██║███████║██████╔╝██║██║   ██║
-██║╚██╔╝██║██╔══██║██╔══██╗██║██║   ██║
-██║ ╚═╝ ██║██║  ██║██║  ██║██║╚██████╔╝
-╚═╝     ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝ ╚═════╝ `;
+    asciiArt.innerHTML = `███╗   ██╗██╗███████╗██╗  ██╗ █████╗ ███╗   ██╗████████╗██╗  ██╗
+████╗  ██║██║██╔════╝██║  ██║██╔══██╗████╗  ██║╚══██╔══╝██║  ██║
+██╔██╗ ██║██║███████╗███████║███████║██╔██╗ ██║   ██║   ███████║
+██║╚██╗██║██║╚════██║██╔══██║██╔══██║██║╚██╗██║   ██║   ██╔══██║
+██║ ╚████║██║███████║██║  ██║██║  ██║██║ ╚████║   ██║   ██║  ██║
+╚═╝  ╚═══╝╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝   ╚═╝   ╚═╝  ╚═╝`;
     terminalContent.appendChild(asciiArt);
 
     // Add divider
@@ -1795,7 +1944,7 @@ ${this.wrapWithColor("╰──────────────────�
 
     // Add role
     const role = document.createElement("div");
-    role.textContent = "Software Engineer • Cloud Architect • Tech Lead";
+    role.textContent = "Computer Science Engineering Student & AI Developer";
     role.style.color = "#666666";
     role.style.fontSize = "10px";
     role.style.fontFamily = "'Fira Code', monospace";
