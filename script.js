@@ -211,13 +211,13 @@ class TerminalResume {
       "projects",
       "skills-visual",
       "game",
-      "exit-game",
       "matrix",
       "stop-matrix",
       "weather",
       "calc",
       "calculate",
       "pdf",
+      "linkedin-cover",
       "ls",
       "cd",
       "cat",
@@ -229,8 +229,8 @@ class TerminalResume {
     if (matches.length === 1) {
       // Single match - complete the command
       inputElement.value = matches[0];
-    } else if (matches.length > 1 && currentInput) {
-      // Multiple matches - show possibilities
+    } else if (matches.length > 1) {
+      // Multiple matches or empty input - show possibilities
       const outputElement = inputElement
         .closest(".terminal-content")
         .querySelector("[id^='output']");
@@ -594,6 +594,24 @@ class TerminalResume {
       case "calculate":
         this.calculate(args.join(" "), outputElement);
         break;
+      case "tab": {
+        this.printToOutput(
+          outputElement,
+          `<span style="color: #ffd93d;">💡 Tip: Press the physical <b>Tab</b> key on your keyboard to auto-complete commands as you type.</span>`,
+          "info"
+        );
+        const commandsList = [
+          "help", "about", "skills", "experience", "education", "contact", "clear",
+          "projects", "skills-visual", "game", "matrix", "weather", "calc", "pdf",
+          "linkedin-cover", "ls", "cd", "cat"
+        ];
+        this.printToOutput(
+          outputElement,
+          `Available commands for autocomplete:\n${commandsList.join("  ")}`,
+          "info"
+        );
+        break;
+      }
       case "":
         break;
       default:
