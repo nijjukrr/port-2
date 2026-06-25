@@ -1017,7 +1017,7 @@ ${this.wrapWithColor("✉", "#ff8c00")}  ${this.wrapWithColor(
       "Email:",
       "#ff8c00"
     )} ${this.wrapWithColor(
-      '<a href="mailto:marjoballabani@gmail.com" style="color: #ffffff; text-decoration: none;">marjoballabani@gmail.com</a>',
+      '<a href="mailto:nishanth.kr@example.com" style="color: #ffffff; text-decoration: none;">nishanth.kr@example.com</a>',
       "#ffffff"
     )}
 
@@ -1025,7 +1025,7 @@ ${this.wrapWithColor("🌐", "#ff8c00")}  ${this.wrapWithColor(
       "Website:",
       "#ff8c00"
     )} ${this.wrapWithColor(
-      '<a href="https://marjoballabani.me" target="_blank" style="color: #ffffff; text-decoration: none;">marjoballabani.me</a>',
+      '<a href="https://nijjukrr.github.io/port-2" target="_blank" style="color: #ffffff; text-decoration: none;">nijjukrr.github.io/port-2</a>',
       "#ffffff"
     )}
 
@@ -1033,7 +1033,7 @@ ${this.wrapWithColor("⚡", "#ff8c00")}  ${this.wrapWithColor(
       "Github:",
       "#ff8c00"
     )} ${this.wrapWithColor(
-      '<a href="https://github.com/marjoballabani" target="_blank" style="color: #ffffff; text-decoration: none;">github.com/marjoballabani</a>',
+      '<a href="https://github.com/nijjukrr" target="_blank" style="color: #ffffff; text-decoration: none;">github.com/nijjukrr</a>',
       "#ffffff"
     )}
 
@@ -1041,7 +1041,7 @@ ${this.wrapWithColor("💼", "#ff8c00")}  ${this.wrapWithColor(
       "LinkedIn:",
       "#ff8c00"
     )} ${this.wrapWithColor(
-      '<a href="https://linkedin.com/in/marjo-ballabani" target="_blank" style="color: #ffffff; text-decoration: none;">linkedin.com/in/marjo-ballabani</a>',
+      '<a href="https://www.linkedin.com/in/nishanth-kr-6105a2380/" target="_blank" style="color: #ffffff; text-decoration: none;">linkedin.com/in/nishanth-kr-6105a2380</a>',
       "#ffffff"
     )}
 
@@ -1838,7 +1838,7 @@ ${this.wrapWithColor("╰──────────────────�
 
     // Add terminal title
     const terminalTitle = document.createElement("div");
-    terminalTitle.textContent = "marjo@ballabani: ~/interactive-resume";
+    terminalTitle.textContent = "nishanth@kr: ~/interactive-resume";
     terminalTitle.style.color = "#f8f8f2";
     terminalTitle.style.fontSize = "12px";
     terminalTitle.style.fontFamily = "'Fira Code', monospace";
@@ -2027,7 +2027,7 @@ ${this.wrapWithColor("╰──────────────────�
     urlContainer.style.textAlign = "center";
 
     const url = document.createElement("div");
-    url.textContent = "marjoballabani.me";
+    url.textContent = "nijjukrr.github.io/port-2";
     url.style.color = "#87cefa";
     url.style.fontSize = "12px";
     url.style.fontFamily = "'Fira Code', monospace";
