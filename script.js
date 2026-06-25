@@ -687,19 +687,6 @@ class TerminalResume {
       "      " +
       this.wrapWithColor("Clear the terminal screen\n", "#ffffff");
 
-    const fileCommands =
-      "\n" +
-      this.wrapWithColor("File System Commands:\n", "#00ffff") +
-      this.wrapWithColor("• ls", "#98fb98") +
-      "        " +
-      this.wrapWithColor("List files and directories\n", "#ffffff") +
-      this.wrapWithColor("• cd [dir]", "#98fb98") +
-      "   " +
-      this.wrapWithColor("Change current directory\n", "#ffffff") +
-      this.wrapWithColor("• cat [file]", "#98fb98") +
-      "  " +
-      this.wrapWithColor("View file contents (supports images!)\n", "#ffffff");
-
     const utilityCommands =
       "\n" +
       this.wrapWithColor("Utility Commands:\n", "#00ffff") +
@@ -752,7 +739,7 @@ class TerminalResume {
       " " +
       this.wrapWithColor("Split vertically", "#444444");
 
-    const help = title + mainCommands + fileCommands + utilityCommands + shortcuts;
+    const help = title + mainCommands + utilityCommands + shortcuts;
 
     const helpDiv = document.createElement("div");
     helpDiv.innerHTML = help;
