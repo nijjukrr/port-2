@@ -1378,15 +1378,10 @@ ${this.wrapWithColor("╰──────────────────�
     const outputElement = this.terminals[this.activeTerminal].input
       .closest(".terminal-content")
       .querySelector("[id^='output']");
-    this.printToOutput(outputElement, "Generating PDF resume...", "info");
-    // Placeholder for actual PDF generation
+    this.printToOutput(outputElement, "Opening PDF resume in a new tab...", "info");
     setTimeout(() => {
-      this.printToOutput(
-        outputElement,
-        "PDF generation is not yet implemented.",
-        "error"
-      );
-    }, 1000);
+      window.open("image/certificates/K. R (1).pdf", "_blank");
+    }, 500);
   }
 
   // Mini-game - Snake game with p5.js
@@ -1806,12 +1801,8 @@ ${this.wrapWithColor("╰──────────────────�
     );
 
     try {
-      // Using OpenWeatherMap API
-      const apiKey = "4331a27995f4c5b5e8d1eab1ed3d88b4"; // Free API key with limited usage
-      const url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(
-        location
-      )}&appid=${apiKey}&units=metric`;
-
+      // Using wttr.in free API (no key required!)
+      const url = `https://wttr.in/${encodeURIComponent(location)}?format=j1`;
       const response = await fetch(url);
 
       if (!response.ok) {
@@ -1819,31 +1810,25 @@ ${this.wrapWithColor("╰──────────────────�
       }
 
       const data = await response.json();
+      const current = data.current_condition[0];
+      const area = data.nearest_area ? data.nearest_area[0] : null;
+      const cityName = area ? area.areaName[0].value : location;
+      const countryName = area ? area.country[0].value : "";
 
       // Format weather data
       const weatherHTML = `<div class="weather-container">
         <div class="weather-header">
-          <span style="color: #ffff00; font-weight: bold;">🌤️ Weather for ${
-            data.name
-          }, ${data.sys.country}</span>
+          <span style="color: #ffff00; font-weight: bold;">🌤️ Weather for ${cityName}${countryName ? ', ' + countryName : ''}</span>
         </div>
         <div class="weather-body">
           <div class="weather-main">
-            <span style="font-size: 2rem; color: #ffffff;">${Math.round(
-              data.main.temp
-            )}°C</span>
-            <span style="color: #cccccc;">${data.weather[0].main}</span>
+            <span style="font-size: 2rem; color: #ffffff;">${current.temp_C}°C</span>
+            <span style="color: #cccccc;">${current.weatherDesc[0].value}</span>
           </div>
           <div class="weather-details">
-            <div><span style="color: #87cefa;">Feels like:</span> ${Math.round(
-              data.main.feels_like
-            )}°C</div>
-            <div><span style="color: #87cefa;">Humidity:</span> ${
-              data.main.humidity
-            }%</div>
-            <div><span style="color: #87cefa;">Wind:</span> ${Math.round(
-              data.wind.speed * 3.6
-            )} km/h</div>
+            <div><span style="color: #87cefa;">Feels like:</span> ${current.FeelsLikeC}°C</div>
+            <div><span style="color: #87cefa;">Humidity:</span> ${current.humidity}%</div>
+            <div><span style="color: #87cefa;">Wind:</span> ${current.windspeedKmph} km/h</div>
           </div>
         </div>
       </div>`;
