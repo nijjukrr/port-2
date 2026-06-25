@@ -778,33 +778,34 @@ ${this.wrapWithColor(
   showExperience(outputElement = this.output) {
     const experience = `<span style="color: #ffff00; font-weight: bold;">💼 My Journey</span>
 
-<span style="color: #00ffff;">UNLOX ACADEMY | Technical Intern</span>
-${this.wrapWithColor(
-  "Recent",
-  "#ffffff"
-)}
-• Worked on technical tasks and web development, gaining hands-on software development experience.
-
-<span style="color: #00ffff;">FREELANCE / STARTUPS | Web Developer</span>
+<span style="color: #00ffff;">UNLOX ACADEMY | Technical Intern (AI)</span>
 ${this.wrapWithColor(
   "Ongoing",
   "#ffffff"
 )}
-• Designed and built custom websites for small startups to solve business challenges.
+• Working on Artificial Intelligence, machine learning integrations, and software engineering.
 
-<span style="color: #00ffff;">INTERNSHALA | Campus Ambassador</span>
+<span style="color: #00ffff;">UNLOX ACADEMY | Technical Intern</span>
 ${this.wrapWithColor(
-  "2025",
+  "Ongoing",
   "#ffffff"
 )}
-• Promoted internships and online training programs, serving as the primary liaison between Internshala and students.
-`;
+• Gaining hands-on experience in full-stack web development and software engineering.
 
-    const experienceDiv = document.createElement("div");
-    experienceDiv.innerHTML = experience;
-    outputElement.appendChild(experienceDiv);
-    this.scrollToBottom(outputElement.closest(".terminal-content"));
-  }
+<span style="color: #00ffff;">FREELANCE / STARTUPS | Web Developer</span>
+${this.wrapWithColor(
+  "Recent",
+  "#ffffff"
+)}
+• Designed and built custom websites for small startups to solve business challenges.
+
+<span style="color: #00ffff;">UNOX | Campus Ambassador</span>
+${this.wrapWithColor(
+  "Recent",
+  "#ffffff"
+)}
+• Promoted outreach, student engagement, and brand initiatives as campus ambassador.
+`;
 
     const experienceDiv = document.createElement("div");
     experienceDiv.innerHTML = experience;
@@ -971,34 +972,44 @@ ${this.wrapWithColor("╰──────────────────�
   loadProjects() {
     this.projects = [
       {
-        title: "Interactive Terminal Resume",
-        description: "A unique terminal-based resume with interactive features",
-        image: "path/to/project-image.jpg",
-        technologies: ["JavaScript", "HTML", "CSS"],
-        demo: "https://demo.example.com",
-        repo: "https://github.com/example/repo",
+        title: "Portfolio Website",
+        description: "A neo-brutalist portfolio website built with vanilla HTML, CSS, and JS.",
+        image: "image/social-cover.png",
+        technologies: ["HTML", "CSS", "JavaScript"],
+        demo: "https://nijjukrr.github.io/port-2",
+        repo: "https://github.com/nijjukrr/port-2",
       },
-      // Add more projects
+      {
+        title: "AI Classifier",
+        description: "An AI/Machine Learning application focused on solving classification/prediction tasks.",
+        image: "image/avatar-nishanth.jpg",
+        technologies: ["Python", "TensorFlow", "Scikit-Learn"],
+        demo: "https://github.com/nijjukrr",
+        repo: "https://github.com/nijjukrr",
+      }
     ];
   }
 
   loadSkills() {
     this.skills = {
-      programming: {
-        JavaScript: 95,
-        Python: 90,
-        "React.js": 85,
-        "Node.js": 88,
+      languages: {
+        Java: 85,
+        Python: 80,
+        JavaScript: 82,
+        SQL: 78,
+        HTML: 90,
+        CSS: 88,
       },
-      cloud: {
-        "Google Cloud": 92,
-        AWS: 85,
-        Azure: 80,
+      concepts: {
+        "Data Structures & Algorithms": 82,
+        "Artificial Intelligence": 75,
+        "Web & Full-Stack Development": 80,
       },
-      databases: {
-        MongoDB: 90,
-        PostgreSQL: 85,
-        Redis: 82,
+      tools: {
+        Git: 85,
+        GitHub: 88,
+        "Node.js": 75,
+        "React.js": 70,
       },
     };
   }
@@ -1008,16 +1019,28 @@ ${this.wrapWithColor("╰──────────────────�
       resume: {
         type: "directory",
         contents: {
-          "about.txt": { type: "file", content: "About me..." },
-          "skills.md": { type: "file", content: "# Skills..." },
-          projects: {
-            type: "directory",
-            contents: {
-              "project1.md": { type: "file", content: "Project 1 details..." },
-            },
+          "about.txt": {
+            type: "file",
+            content: "I'm a Computer Science Engineering student with a strong interest in Artificial Intelligence, software development, and problem-solving. I'm currently building my skills in Java, Data Structures & Algorithms, AI, web development, and full-stack application development. My goal is to continuously learn, improve, and build intelligent and impactful solutions that solve real-world problems."
           },
-        },
-      },
+          "skills.md": {
+            type: "file",
+            content: "# Technical Skills\n\n* Programming Languages: Java, Python, JavaScript, HTML, CSS, SQL\n* Core Focus Areas: Data Structures & Algorithms (DSA), Artificial Intelligence (AI)\n* Web & Full-Stack Development: Node.js, Express.js, React.js, Git & GitHub"
+          },
+          "education.txt": {
+            type: "file",
+            content: "Sri Shakthi Institute of Engineering and Technology\nB.E. Computer Science and Engineering (2025 - 2029)\nCoimbatore, Tamil Nadu, India"
+          },
+          "experience.txt": {
+            type: "file",
+            content: "- Technical Intern (AI) @ Unlox Academy (Ongoing)\n  Working on Artificial Intelligence, machine learning integrations, and software engineering.\n\n- Technical Intern @ Unlox Academy (Ongoing)\n  Gaining hands-on experience in full-stack web development and software engineering.\n\n- Web Developer @ Freelance (Recent)\n  Designed and built custom websites for small startups to solve business challenges.\n\n- Campus Ambassador @ Unox (Recent)\n  Promoted outreach, student engagement, and brand initiatives as campus ambassador."
+          },
+          "contact.txt": {
+            type: "file",
+            content: "GitHub: https://github.com/nijjukrr\nLinkedIn: https://www.linkedin.com/in/nishanth-kr-6105a2380/"
+          }
+        }
+      }
     };
   }
 
