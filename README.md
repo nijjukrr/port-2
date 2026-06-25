@@ -1,10 +1,8 @@
-# marjoballabani.me
+# NISHANTH K.R. | Portfolio & Interactive Terminal Resume
 
-A neo-brutalist personal portfolio built with vanilla HTML, CSS, and JavaScript. No frameworks, no build tools, no dependencies - just raw code with bold design choices.
+A neo-brutalist personal portfolio built with vanilla HTML, CSS, and JavaScript.
 
-This is a personal fun project, not a production template. The code prioritizes creativity and experimentation over best practices. It's a playground for trying out ideas, animations, and interactions - not a reference architecture.
-
-**[Live Site](https://marjoballabani.me)**
+**[Live Site (Vercel)](https://marjoballabanime-opal.vercel.app)**
 
 ## What is Neo-Brutalism?
 
@@ -54,7 +52,7 @@ The palette uses CSS custom properties for light/dark theming:
 
 ## Terminal Mode
 
-Visit [/terminal.html](https://marjoballabani.me/terminal.html) for an interactive terminal-style resume.
+Visit [/terminal.html](https://marjoballabanime-opal.vercel.app/terminal.html) for an interactive terminal-style resume.
 
 Features:
 - Type `help` to see available commands
